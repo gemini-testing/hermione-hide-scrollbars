@@ -27,6 +27,7 @@
     "sinon": "^7.3.2"
   },
   "dependencies": {
+    "debug": "^4.1.1",
     "gemini-configparser": "^1.0.0",
     "puppeteer-core": "^1.18.1"
   }

@@ -2,6 +2,7 @@
 
 const parseConfig = require('./config');
 const DevTools = require('./dev-tools');
+const debug = require('debug')('hermione-hide-scrollbars');
 
 module.exports = (hermione, opts) => {
     const config = parseConfig(opts);
@@ -14,14 +15,22 @@ module.exports = (hermione, opts) => {
             return;
         }
 
-        const browserWSEndpoint = config.browserWSEndpoint({
-            sessionId,
-            gridUrl: hermione.config.forBrowser(browserId).gridUrl
-        });
+        try {
+            const browserWSEndpoint = config.browserWSEndpoint({
+                sessionId,
+                gridUrl: hermione.config.forBrowser(browserId).gridUrl
+            });
 
-        const devtools = await DevTools.create({browserWSEndpoint});
+            debug(`connecting devtools via endpoint ${browserWSEndpoint}`);
+            const devtools = await DevTools.create({browserWSEndpoint});
 
-        devtools.setScrollbarsHiddenOnNewPage();
-        await devtools.hideScrollbarsOnActivePages();
+            debug('preventing scrollbars on any new page');
+            devtools.setScrollbarsHiddenOnNewPage();
+
+            debug('hiding scrollbars on active pages');
+            await devtools.hideScrollbarsOnActivePages();
+        } catch (e) {
+            throw (e.error || e);
+        }
     });
 };
