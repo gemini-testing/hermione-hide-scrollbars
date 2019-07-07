@@ -4,7 +4,12 @@ const puppeteer = require('puppeteer-core');
 
 module.exports = class DevTools {
     static async create({browserWSEndpoint}) {
-        return new DevTools(await puppeteer.connect({browserWSEndpoint}));
+        const browser = await puppeteer.connect({
+            browserWSEndpoint,
+            defaultViewport: null
+        });
+
+        return new DevTools(browser);
     }
 
     constructor(browser) {

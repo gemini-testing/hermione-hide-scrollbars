@@ -24,7 +24,13 @@ describe('dev-tools', () => {
         it('should connect puppeteer', async () => {
             await DevTools.create({browserWSEndpoint: 'ws://foo/bar'});
 
-            assert.calledOnceWith(puppeteer.connect, {browserWSEndpoint: 'ws://foo/bar'});
+            assert.calledOnceWith(puppeteer.connect, sinon.match({browserWSEndpoint: 'ws://foo/bar'}));
+        });
+
+        it('should not modify viewport size on connect', async () => {
+            await DevTools.create({});
+
+            assert.calledWithMatch(puppeteer.connect, {defaultViewport: null});
         });
     });
 
