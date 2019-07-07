@@ -1,10 +1,16 @@
 'use strict';
 
 const puppeteer = require('puppeteer-core');
+const debug = require('debug')('hermione-hide-scrollbars');
 
 module.exports = class DevTools {
     static async create({browserWSEndpoint}) {
-        return new DevTools(await puppeteer.connect({browserWSEndpoint}));
+        const browser = await puppeteer.connect({
+            browserWSEndpoint,
+            defaultViewport: null
+        });
+
+        return new DevTools(browser);
     }
 
     constructor(browser) {
@@ -19,6 +25,7 @@ module.exports = class DevTools {
     setScrollbarsHiddenOnNewPage() {
         this._browser.on('targetcreated', (target) => {
             if (target.page()) {
+                debug('new page opened. Hiding scrollbars');
                 disableScrollBarsOnPage(target).catch((e) => console.error(e.stack));
             }
         });
