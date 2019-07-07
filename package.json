@@ -1,6 +1,6 @@
 {
   "name": "hermione-hide-scrollbars",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin to hide scrollbars",
   "scripts": {
     "lint": "eslint .",
