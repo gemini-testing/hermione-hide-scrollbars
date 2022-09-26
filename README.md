@@ -1,30 +1,9 @@
 # hermione-hide-scrollbars
 
-Plugin for [hermione](https://github.com/gemini-testing/hermione) which hides scrollbars in Chrome browsers. Uses [puppeteer-core](https://github.com/GoogleChrome/puppeteer) inside.
-More info about hermione plugins in [hermione](https://github.com/gemini-testing/hermione#plugins).
+The plugin for [hermione](https://github.com/gemini-testing/hermione).
 
-## Installation
+Use the `hermione-hide-scrollbars` plugin to hide scrollbars in tests that run in Chrome browsers.
 
-```bash
-$ npm install --save hermione-hide-scrollbars
-```
-
-## Configuration
-
-In hermione config:
-
-```js
-module.exports = {
-    // ...
-
-    plugins: {
-        'hermione-hide-scrollbars': {
-            enabled: true,
-            browsers: ['chrome'],
-            browserWSEndpoint: ({sessionId, gridUrl}) => `ws://${url.parse(gridUrl).host}/devtools/${sessionId}`
-        }
-    },
-
-    // ...
-};
-```
+See full documentation in various languages here:
+* [English](./docs/en/hermione-hide-scrollbars.md)
+* [Русский](./docs/ru/hermione-hide-scrollbars.md)
