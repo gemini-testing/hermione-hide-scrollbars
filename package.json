@@ -29,6 +29,9 @@
   "dependencies": {
     "debug": "^4.1.1",
     "gemini-configparser": "^1.0.0",
-    "puppeteer-core": "^1.18.1"
+    "puppeteer-core": "^19.4.0"
+  },
+  "peerDependencies": {
+    "hermione": ">=6.0.1"
   }
 }
