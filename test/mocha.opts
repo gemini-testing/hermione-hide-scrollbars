@@ -1,4 +1,0 @@
---require ./test/setup
---require ./test/assert-ext
--t 0
---recursive

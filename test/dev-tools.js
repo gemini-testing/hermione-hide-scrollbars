@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const {EventEmitter} = require('events');
+const EventEmitter2 = require('eventemitter2');
 const puppeteer = require('puppeteer-core');
 const DevTools = require('../dev-tools');
 
@@ -9,7 +9,7 @@ describe('dev-tools', () => {
     const sandbox = sinon.createSandbox();
 
     const stubBrowser = () => {
-        const browser = new EventEmitter();
+        const browser = new EventEmitter2();
         browser.pages = sinon.stub().resolves([]);
         return browser;
     };
@@ -53,7 +53,7 @@ describe('dev-tools', () => {
 
             const target = _.defaults(opts, {
                 createCDPSession: sinon.stub().resolves(client),
-                page: () => Object.create(null)
+                page: sinon.stub().resolves(Object.create(null))
             });
 
             const page = {
@@ -66,26 +66,37 @@ describe('dev-tools', () => {
         describe('setScrollbarsHiddenOnNewPage', () => {
             it('should hide scrollbars for any created page', async () => {
                 const {devtools, browser} = await initDevTools_();
-                const {target, client} = await stubTarget_();
+                const {target, client} = stubTarget_();
 
                 devtools.setScrollbarsHiddenOnNewPage();
-                browser.emit('targetcreated', target);
 
-                await null; // force further execution on next tick
+                await browser.emitAsync('targetcreated', target); // in order to test sync event with async handler
 
                 assert.calledOnceWith(client.send, 'Emulation.setScrollbarsHidden', {hidden: true});
             });
 
             it('should do nothing for any other created object', async () => {
                 const {devtools, browser} = await initDevTools_();
-                const {target, client} = await stubTarget_({page: () => null});
+                const {target, client} = stubTarget_({page: () => null});
 
                 devtools.setScrollbarsHiddenOnNewPage();
-                browser.emit('targetcreated', target);
 
-                await null; // force further execution on next tick
+                await browser.emitAsync('targetcreated', target); // in order to test sync event with async handler
 
                 assert.notCalled(client.send);
+            });
+
+            it('should not fail on errors', async () => {
+                sandbox.stub(console, 'error');
+
+                const err = new Error('o.O');
+                const {devtools, browser} = await initDevTools_();
+                const {target} = stubTarget_({page: sinon.stub().rejects(err)});
+                devtools.setScrollbarsHiddenOnNewPage();
+
+                await assert.isFulfilled(browser.emitAsync('targetcreated', target));
+
+                assert.calledOnceWith(console.error, 'Coulnd\'t connect to CDP session:', err);
             });
         });
 

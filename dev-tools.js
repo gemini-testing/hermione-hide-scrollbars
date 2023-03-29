@@ -23,10 +23,18 @@ module.exports = class DevTools {
     }
 
     setScrollbarsHiddenOnNewPage() {
-        this._browser.on('targetcreated', (target) => {
-            if (target.page()) {
+        this._browser.on('targetcreated', async (target) => {
+            try {
+                const page = await target.page();
+
+                if (!page) {
+                    return;
+                }
+
                 debug('new page opened. Hiding scrollbars');
-                disableScrollBarsOnPage(target).catch((e) => console.error(e.stack));
+                await disableScrollBarsOnPage(target);
+            } catch (err) {
+                console.error('Coulnd\'t connect to CDP session:', err);
             }
         });
     }
