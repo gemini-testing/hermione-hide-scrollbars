@@ -8,7 +8,11 @@ To access the browser via [Chrome DevTools Protocol (CDP)][CDP], the plugin uses
 
 To hide scroll bars, the CDP [Emulation.setScrollbarsHidden][set-scrollbars-hidden] command is used.
 
-**Update your Chrome browser to version 72.1 and higher** so that this functionality works in your tests. Since earlier versions of Chrome browsers do not support the _Emulation.setScrollbarsHidden_ command.
+**Update your Chrome browser to version 109.0 and higher** so that this functionality works in your tests.
+
+**To use chrome browsers versions from 72.1 (inclusive) to 109.0 (not inclusive)**, use hermione-hide-scrollbars@1.0.1.
+
+*Earlier versions of Chrome browsers do not support the _Emulation.setScrollbarsHidden_ command.*
 
 ## Install
 
